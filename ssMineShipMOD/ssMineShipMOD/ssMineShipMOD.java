@@ -68,7 +68,7 @@ public class ssMineShipMOD {
 	
 	HashMap<String,byte[]> 入力状態 = new HashMap<String,byte[]>();
 
-	@SidedProxy(clientSide = "net.minecraft.ssmineship.clientproxy", serverSide = "net.minecraft.ssmineship.serverproxy")
+	@SidedProxy(clientSide = "net.minecraft.ssMineShipMOD.clientproxy", serverSide = "net.minecraft.ssMineShipMOD.serverproxy")
 	public static serverproxy プロキシ;
 
 	@Mod.Instance("ssMineShipMod")
