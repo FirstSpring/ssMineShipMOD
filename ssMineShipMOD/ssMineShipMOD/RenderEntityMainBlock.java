@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.Icon;
@@ -64,6 +65,21 @@ public class RenderEntityMainBlock  extends Render
 
 		if(ssMineShipMOD.インスタンス.構築済み.containsKey(e.entityId)&&ssMineShipMOD.インスタンス.構築済み.get(e.entityId)==1)
 		{
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float)par2, (float)par4+0.5F, (float)par6);
+			GL11.glRotatef(-par8, 0.0F, 1.0F, 0.0F);
+			i = ssMineShipMOD.インスタンス.クライアント描画用データ.get(e.entityId).iterator();
+			while(i.hasNext())
+			{
+				clientBlockData eb = (clientBlockData)i.next();
+				if(eb.te != null)
+				{
+					eb.te.updateEntity();
+					TileEntityRenderer.instance.renderTileEntityAt(eb.te,eb.mainとの相対座標X-0.5F,eb.mainとの相対座標Y-0.5F,eb.mainとの相対座標Z-0.5F, par9);
+				}
+			}
+			GL11.glPopMatrix();
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)par2, (float)par4+0.5F, (float)par6);
 			GL11.glRotatef(-par8, 0.0F, 1.0F, 0.0F);

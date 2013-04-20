@@ -3,17 +3,26 @@ package net.minecraft.ssMineShipMOD;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 //サーバーだけで!
 public class serverDataBlock
 {
-	private WorldServer データ用ワールド;
+	public boolean 常に更新と描画するか = false;
+
+	public WorldServer データ用ワールド;
 	EntityMainBlock メイン;
 	EntityBlockCol あたり判定用;
 	public int ブロックID;
@@ -26,7 +35,7 @@ public class serverDataBlock
 	public boolean 左見えている = false;
 	public boolean 前見えている = false;
 	public boolean 後見えている = false;
-	
+
 	public int mainとの相対座標X;
 	public int mainとの相対座標Y;
 	public int mainとの相対座標Z;
@@ -36,6 +45,27 @@ public class serverDataBlock
 	public serverDataBlock()
 	{
 		データ用ワールド = MinecraftServer.getServer().worldServerForDimension(ssMineShipMOD.インスタンス.データ用ディメンジョン);
+	}
+
+	public void 同期()
+	{
+		TileEntity te = this.データ用ワールド.getBlockTileEntity(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z);
+		te.updateEntity();
+		Iterator<EntityPlayer> it = ssMineShipMOD.インスタンス.描画してる蔵一覧.iterator();
+		while(it.hasNext())
+		{
+			Packet p = te.getDescriptionPacket();
+			if(p != null){
+				ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
+				DataOutputStream dos = new DataOutputStream(bos);
+				try {
+					p.writePacketData(dos);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期",bos.toByteArray()),(Player)it.next());
+			}
+		}
 	}
 
 	public serverDataBlock(EntityMainBlock emb,World par1World,int x,int y,int z,int px,int py,int pz,int bx,int by,int bz)
@@ -80,15 +110,19 @@ public class serverDataBlock
 		this.ブロックID = this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z);
 		this.メタデータ = this.データ用ワールド.getBlockMetadata(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z);
 
+		//要修正
+		if(this.データ用ワールド.getBlockTileEntity(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z) != null)
+			常に更新と描画するか = true;
+
 		posXYZ poss = new posXYZ(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z);
 		ssMineShipMOD.インスタンス.座標toブロックデータ.put(poss,this);
-		
+
 		double cosx = Math.cos((double)(this.メイン.rotationYaw + this.mainとの角度) * Math.PI / 180.0D)*this.mainとの距離;
 		double var3 = Math.sin((double)(this.メイン.rotationYaw + this.mainとの角度) * Math.PI / 180.0D)*this.mainとの距離;
 		this.あたり判定用 = new EntityBlockCol(this.メイン.worldObj,this.メイン.posX - 0.5F + cosx, this.メイン.posY + this.mainとの相対座標Y,this.メイン.posZ - 0.5F + var3,this);
 		this.あたり判定用.rotationYaw = 0.0F;
 		this.メイン.worldObj.spawnEntityInWorld(this.あたり判定用);
-		
+
 		if(this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y+1,this.メイン.ブロックの位置Z+this.mainとの相対座標Z) == 0)
 			this.上見えている = true;
 		else if(!Block.blocksList[this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y+1,this.メイン.ブロックの位置Z+this.mainとの相対座標Z)].blockMaterial.getCanBlockGrass())
@@ -128,6 +162,8 @@ public class serverDataBlock
 			dos.writeBoolean(this.前見えている);
 			dos.writeBoolean(this.後見えている);
 
+			dos.writeBoolean(this.常に更新と描画するか);
+
 			dos.writeInt(this.ブロックID);
 			dos.writeInt(this.メタデータ);
 			dos.writeInt(this.メインのエンティティID);
@@ -141,10 +177,10 @@ public class serverDataBlock
 	}
 
 	public double getDistance()
-    {
-        double d3 = this.mainとの相対座標X;
-        double d4 = 0;
-        double d5 = this.mainとの相対座標Z;
-        return (double)MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-    }
+	{
+		double d3 = this.mainとの相対座標X;
+		double d4 = 0;
+		double d5 = this.mainとの相対座標Z;
+		return (double)MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
+	}
 }

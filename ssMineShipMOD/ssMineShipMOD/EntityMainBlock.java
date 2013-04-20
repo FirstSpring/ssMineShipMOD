@@ -29,9 +29,11 @@ public class EntityMainBlock extends ssEntity
 		this.motionX = 0.0D;
 		this.motionY = 0.0D;
 		this.motionZ = 0.0D;
-		this.ディメンジョンID = par1World.provider.dimensionId;
-		if(!par1World.isRemote)
+		if(par1World != null&&!par1World.isRemote)
+		{
 			データ用ワールド = MinecraftServer.getServer().worldServerForDimension(ssMineShipMOD.インスタンス.データ用ディメンジョン);
+			this.ディメンジョンID = par1World.provider.dimensionId;
+		}
 		this.setSize(1.0F,1.0F);//あたり判定はブロックと同じ
 	}
 
@@ -196,11 +198,11 @@ public class EntityMainBlock extends ssEntity
 			}
 
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
-
 			for(int i = 0;i<this.構成しているブロック.size();i++)
 			{
 				serverDataBlock e = this.構成しているブロック.get(i);
-
+				if(e.常に更新と描画するか)
+					e.同期();
 				double cosx = Math.cos((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 				double var3 = Math.sin((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 				e.あたり判定用.setPosition(this.posX - 0.5F + cosx, this.posY + e.mainとの相対座標Y, this.posZ - 0.5F + var3);
@@ -220,13 +222,19 @@ public class EntityMainBlock extends ssEntity
 			}
 			else if(par1EntityPlayer.getCurrentItemOrArmor(0) == null)
 			{
-				par1EntityPlayer.sendChatToPlayer("遠隔操作的な");
+
 				if(ssMineShipMOD.インスタンス.オーナー.containsKey(this))
 				{
 					if(ssMineShipMOD.インスタンス.オーナー.get(this) == par1EntityPlayer)
+					{
 						ssMineShipMOD.インスタンス.オーナー.remove(this);
+						par1EntityPlayer.sendChatToPlayer("解除");
+					}
 				}
-				else ssMineShipMOD.インスタンス.オーナー.put(this, par1EntityPlayer);
+				else{
+					ssMineShipMOD.インスタンス.オーナー.put(this, par1EntityPlayer);
+					par1EntityPlayer.sendChatToPlayer("遠隔操作的な");
+				}
 			}
 		}
 		return false;

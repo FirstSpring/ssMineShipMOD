@@ -1,4 +1,4 @@
-package net.minecraft.ssMineShipMOD
+package net.minecraft.ssMineShipMOD;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

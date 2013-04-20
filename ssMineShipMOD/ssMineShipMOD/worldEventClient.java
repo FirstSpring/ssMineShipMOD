@@ -13,7 +13,7 @@ public class worldEventClient {
 	{
 		if(l.world != null&&l.world instanceof WorldClient&&!(l.world instanceof mineship_worldClient))
 		{
-			ssMineShipMOD.インスタンス.偽クライアントワールド = new mineship_worldClient((WorldClient)l.world);
+			clientproxy.偽クライアントワールド = new mineship_worldClient((WorldClient)l.world);
 		}
 	}
 }
