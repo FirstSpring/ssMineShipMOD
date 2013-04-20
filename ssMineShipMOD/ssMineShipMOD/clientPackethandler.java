@@ -67,7 +67,24 @@ public class clientPackethandler implements IPacketHandler
 			handleTileEntityData(p);
 			mc.thePlayer.worldObj = clientproxy.クライアントワールド;
 			mc.theWorld = (WorldClient) clientproxy.クライアントワールド;
-		}		
+		}
+		if(packet.channel.equals("データ同期250"))
+		{
+			InputStream is = new ByteArrayInputStream(packet.data);
+			DataInputStream dis = new DataInputStream(is);
+			clientproxy.クライアントワールド = mc.theWorld;
+			mc.thePlayer.worldObj = clientproxy.偽クライアントワールド;
+			mc.theWorld = clientproxy.偽クライアントワールド;
+			Packet250CustomPayload p = new Packet250CustomPayload();
+			try {
+				p.readPacketData(dis);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			mc.thePlayer.sendQueue.handleCustomPayload(p);
+			mc.thePlayer.worldObj = clientproxy.クライアントワールド;
+			mc.theWorld = (WorldClient) clientproxy.クライアントワールド;
+		}
 	}
 
 	public void handleTileEntityData(Packet132TileEntityData par1Packet132TileEntityData)

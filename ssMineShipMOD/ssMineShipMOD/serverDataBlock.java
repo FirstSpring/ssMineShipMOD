@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -55,7 +56,7 @@ public class serverDataBlock
 		while(it.hasNext())
 		{
 			Packet p = te.getDescriptionPacket();
-			if(p != null){
+			if(p != null&&p instanceof Packet132TileEntityData){
 				ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
 				DataOutputStream dos = new DataOutputStream(bos);
 				try {
@@ -64,6 +65,16 @@ public class serverDataBlock
 					e.printStackTrace();
 				}
 				PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期",bos.toByteArray()),(Player)it.next());
+			}
+			else if(p != null&&p instanceof Packet250CustomPayload){
+				ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
+				DataOutputStream dos = new DataOutputStream(bos);
+				try {
+					p.writePacketData(dos);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期250",bos.toByteArray()),(Player)it.next());
 			}
 		}
 	}
