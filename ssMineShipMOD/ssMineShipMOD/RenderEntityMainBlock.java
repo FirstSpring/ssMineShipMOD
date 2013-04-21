@@ -65,7 +65,6 @@ public class RenderEntityMainBlock  extends Render
 
 		if(ssMineShipMOD.インスタンス.構築済み.containsKey(e.entityId)&&ssMineShipMOD.インスタンス.構築済み.get(e.entityId)==1)
 		{
-
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)par2, (float)par4+0.5F, (float)par6);
 			GL11.glRotatef(-par8, 0.0F, 1.0F, 0.0F);

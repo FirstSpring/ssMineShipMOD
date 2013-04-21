@@ -89,7 +89,7 @@ public abstract class ssEntity extends Entity
 		}
 	}
 
-	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
+	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)//無敵
 	{
 		return false;
 	}

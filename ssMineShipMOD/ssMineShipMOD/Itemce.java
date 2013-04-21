@@ -131,9 +131,9 @@ public class Itemce extends Item{
 								ssMineShipMOD.インスタンス.使っている人一覧.get(par3EntityPlayer).登録されているブロックの相対座標.add(p);
 							else par3EntityPlayer.sendChatToPlayer("すでに登録されてます");
 							int c = 0;
-							for(int x = -半径;x<半径*2;x++){
-								for(int y = -半径;y<半径*2;y++){
-									for(int z = -半径;z<半径*2;z++){
+							for(int x = -半径;x<半径;x++){
+								for(int y = -半径;y<半径;y++){
+									for(int z = -半径;z<半径;z++){
 										if(x==半径&&y==半径&&z==半径)
 											continue;
 										if(par2World.getBlockId(i+x,j+y,k+z) != 0)
@@ -153,9 +153,7 @@ public class Itemce extends Item{
 							par3EntityPlayer.sendChatToPlayer("変更");
 							ssMineShipMOD.インスタンス.使っている人一覧.get(par3EntityPlayer).ブロックをエンティティに();
 						}
-
 					}
-
 				}
 				return par1ItemStack;
 			}

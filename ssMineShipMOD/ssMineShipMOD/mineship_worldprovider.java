@@ -11,7 +11,7 @@ public class mineship_worldprovider extends WorldProvider{
 		return "mineshipdata";
 	}
 	
-	public IChunkProvider createChunkGenerator()
+	public IChunkProvider createChunkGenerator()//岩盤だけ
     {
         return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), "2;7;1;");
     }

@@ -1,15 +1,19 @@
 package net.minecraft.ssMineShipMOD;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Vec3Pool;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 
 public class mineshipWorld extends WorldServer
 {
+	WorldServer データ用ワールド;
+
 	public mineshipWorld(WorldServer データ用ワールド) {
 		super(
 				MinecraftServer.getServer(), データ用ワールド.
@@ -22,6 +26,7 @@ public class mineshipWorld extends WorldServer
 						データ用ワールド.theProfiler,
 						データ用ワールド.getWorldLogAgent()
 				);
+		this.データ用ワールド = データ用ワールド;
 	}
 
 	public void func_96440_m(int par1, int par2, int par3, int par4)
@@ -64,7 +69,7 @@ public class mineshipWorld extends WorldServer
 		{
 			return null;
 		}
-		else return super.getBlockTileEntity(par1, par2, par3);
+		else return データ用ワールド.getBlockTileEntity(par1, par2, par3);
 	}
 
 	public void notifyBlockOfNeighborChange(int par1, int par2, int par3, int par4)
@@ -116,5 +121,57 @@ public class mineshipWorld extends WorldServer
 			return MinecraftServer.getServer().worldServerForDimension(ssMineShipMOD.インスタンス.カレントcolエンティティ.メイン.worldObj.provider.dimensionId).spawnEntityInWorld(par1Entity);
 		}
 		return false;
+	}
+
+	public boolean setBlock(int par1, int par2, int par3, int par4, int par5, int par6)
+	{
+		return データ用ワールド.setBlock(par1, par2, par3, par4,par5,par6);
+	}
+
+	public boolean setBlockMetadataWithNotify(int par1, int par2, int par3, int par4, int par5)
+	{
+		return データ用ワールド.setBlockMetadataWithNotify(par1, par2, par3, par4, par5);
+	}
+
+	public void setBlockTileEntity(int par1, int par2, int par3, TileEntity par4TileEntity)
+	{
+		データ用ワールド.setBlockTileEntity(par1, par2, par3, par4TileEntity);
+	}
+
+	public void markBlockForUpdate(int par1, int par2, int par3)
+	{
+		データ用ワールド.markBlockForUpdate(par1, par2, par3);
+	}
+
+	@Override
+	public int getBlockId(int i, int j, int k) {
+		if(データ用ワールド != null)
+			return データ用ワールド.getBlockId(i,j,k);
+		return 0;
+	}
+
+	@Override
+	public int getBlockMetadata(int i, int j, int k) {
+		return データ用ワールド.getBlockMetadata(i,j,k);
+	}
+
+	@Override
+	public Material getBlockMaterial(int i, int j, int k) {
+		return データ用ワールド.getBlockMaterial(i,j,k);
+	}
+
+	@Override
+	public boolean isBlockNormalCube(int i, int j, int k) {
+		return データ用ワールド.isBlockNormalCube(i,j,k);
+	}
+
+	@Override
+	public Vec3Pool getWorldVec3Pool() {
+		return データ用ワールド.getWorldVec3Pool();
+	}
+
+	@Override
+	public int isBlockProvidingPowerTo(int i, int j, int k, int l) {
+		return データ用ワールド.isBlockProvidingPowerTo(i,j,k,l);
 	}
 }

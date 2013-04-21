@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class worldEventClient {
 	@ForgeSubscribe
-	public void worldload(WorldEvent.Load l)
+	public void worldload(WorldEvent.Load l)//クライアント側ワールドがロードされたらそれを基に偽物を作る
 	{
 		if(l.world != null&&l.world instanceof WorldClient&&!(l.world instanceof mineship_worldClient))
 		{

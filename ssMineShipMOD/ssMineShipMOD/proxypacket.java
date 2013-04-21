@@ -52,9 +52,12 @@ public class proxypacket implements IPacketHandler{
 							最初 = false;
 						}
 						byte[] データ = new byte[25];
+						//どれかの面が見えてたら
 						if(s.上見えている||s.下見えている||s.前見えている||s.右見えている||s.左見えている||s.後見えている)
 						{
 							PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("描画要求への返事",s.cb()),player);
+							if(s.常に更新と描画するか)
+								s.同期();
 						}
 						else c++;
 					}
@@ -64,6 +67,7 @@ public class proxypacket implements IPacketHandler{
 				}
 			}
 		}
+		//蔵
 		ssMineShipMOD.インスタンス.プロキシ.オンパケット(manager, packet, player);
 	}
 

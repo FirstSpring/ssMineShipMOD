@@ -11,5 +11,6 @@ public class serverproxy {
 	{
 		TickRegistry.registerTickHandler(new servertickhandler(), Side.SERVER);
 	}
+	
 	public void オンパケット(INetworkManager manager,Packet250CustomPayload packet, Player player){}
 }

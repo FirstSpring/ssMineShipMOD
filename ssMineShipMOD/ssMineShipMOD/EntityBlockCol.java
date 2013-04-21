@@ -45,7 +45,7 @@ public class EntityBlockCol extends ssEntity{
 		}
 	}
 
-	public boolean interact(EntityPlayer par1EntityPlayer)
+	public boolean interact(EntityPlayer par1EntityPlayer)//右クリック
 	{
 		if(par1EntityPlayer.isSneaking())
 			super.interact(par1EntityPlayer);
