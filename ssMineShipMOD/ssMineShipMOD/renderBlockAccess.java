@@ -10,7 +10,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class renderBlockAccess implements IBlockAccess
 {
-
 	public IBlockAccess ba;
 
 	public renderBlockAccess(IBlockAccess ba)
@@ -52,13 +51,13 @@ public class renderBlockAccess implements IBlockAccess
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getBrightness(int i, int j, int k, int l) {
-		return 15;//ba.getBrightness(i, j, k, l);
+		return 1.0F;//ba.getBrightness(i, j, k, l);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getLightBrightness(int i, int j, int k) {
-		return 15 << 20 | 15 << 4;//ba.getLightBrightness(i, j, k);
+		return 1.0F;//ba.getLightBrightness(i, j, k);
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class renderBlockAccess implements IBlockAccess
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BiomeGenBase getBiomeGenForCoords(int i, int j) {
-		return ba.getBiomeGenForCoords(i, j);
+		return BiomeGenBase.plains;
 	}
 
 	@Override

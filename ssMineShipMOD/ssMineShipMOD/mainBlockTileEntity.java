@@ -46,8 +46,16 @@ public class mainBlockTileEntity extends TileEntity{
 				posXYZ p = (posXYZ) i.next();
 				一番大きいX座標 = Math.max(最新の端+p.x,一番大きいX座標);
 			}
+			
+			i = this.登録されているブロックの相対座標.iterator();
+			int 一番小さいX = 一番大きいX座標;
+			while(i.hasNext())
+			{
+				posXYZ p = (posXYZ) i.next();
+				一番小さいX = Math.min(p.x,一番小さいX);
+			}
 
-			一番大きいX座標+=8;
+			一番大きいX座標+=32;
 
 			ssMineShipMOD.インスタンス.一番大きいX座標 = 一番大きいX座標;
 

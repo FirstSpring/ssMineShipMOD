@@ -3,13 +3,13 @@ package net.minecraft.ssMineShipMOD;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -82,14 +82,16 @@ public class RenderEntityMainBlock  extends Render
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)par2, (float)par4+0.5F, (float)par6);
 			GL11.glRotatef(-par8, 0.0F, 1.0F, 0.0F);
-			GL11.glCallList(e.entityId);
+			GL11.glCallList(ssMineShipMOD.インスタンス.コールリストID.get(e.entityId));
 			GL11.glPopMatrix();
 		}
 	}
 
 	public void 描画データ用意(Entity e,Iterator i)
 	{
-		GL11.glNewList(e.entityId, GL11.GL_COMPILE);
+		int cid = GLAllocation.generateDisplayLists(1);
+		ssMineShipMOD.インスタンス.コールリストID.put(e.entityId, cid);
+		GL11.glNewList(cid, GL11.GL_COMPILE);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)-0.5F, (float)-0.5F, (float)-0.5F);
 		Tessellator.instance.startDrawingQuads();
@@ -103,27 +105,6 @@ public class RenderEntityMainBlock  extends Render
 				if(Block.blocksList[eb.ブロックID].getRenderType() == 4)
 					this.水だけ特別(Block.blocksList[eb.ブロックID],eb.mainとの相対座標X,eb.mainとの相対座標Y,eb.mainとの相対座標Z);
 				else clientproxy.rb.renderBlockByRenderType(Block.blocksList[eb.ブロックID],eb.mainとの相対座標X,eb.mainとの相対座標Y,eb.mainとの相対座標Z);
-			}
-		}
-		Class<Tessellator> c  = Tessellator.class;
-		Field a = null;
-		try {
-			a = c.getDeclaredField("hasBrightness");
-		}catch (NoSuchFieldException e1) {
-			try {
-				a = c.getDeclaredField("field_78414_p");
-			}catch (NoSuchFieldException e2) {
-				e2.printStackTrace();
-			}
-		}
-
-		if(a != null)
-		{
-			a.setAccessible(true);
-			try {
-				a.setBoolean(Tessellator.instance, false);
-			} catch (Exception e1) {
-				e1.printStackTrace();
 			}
 		}
 		Tessellator.instance.draw();

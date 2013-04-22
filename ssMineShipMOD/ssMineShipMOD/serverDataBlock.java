@@ -88,7 +88,7 @@ public class serverDataBlock
 		this.mainとの相対座標Y = py;
 		this.mainとの相対座標Z = pz;
 		ssMineShipMOD.インスタンス.ヌルを返す = true;
-		this.データ用ワールド.setBlock(bx,by,bz,par1World.getBlockId(x, y, z),par1World.getBlockMetadata(x, y, z),3);
+		this.データ用ワールド.setBlock(bx,by,bz,par1World.getBlockId(x, y, z),par1World.getBlockMetadata(x, y, z),0);
 		ssMineShipMOD.インスタンス.ヌルを返す = false;
 		this.データ用ワールド.markBlockForUpdate(bx,by,bz);
 		if(par1World.getBlockTileEntity(x,y,z) != null&&this.データ用ワールド.getBlockTileEntity(bx,by,bz) != null)
@@ -99,6 +99,7 @@ public class serverDataBlock
 			this.データ用ワールド.getBlockTileEntity(bx,by,bz).xCoord = bx;
 			this.データ用ワールド.getBlockTileEntity(bx,by,bz).yCoord = by;
 			this.データ用ワールド.getBlockTileEntity(bx,by,bz).zCoord = bz;
+			this.データ用ワールド.getBlockTileEntity(bx,by,bz).validate();
 		}
 	}
 
@@ -152,6 +153,7 @@ public class serverDataBlock
 			this.後見えている = true;
 		else if(!Block.blocksList[this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z-1)].blockMaterial.getCanBlockGrass())
 			this.後見えている = true;
+		/*
 		if(this.上見えている||this.下見えている||this.前見えている||this.右見えている||this.左見えている||this.後見えている)
 		{
 			double cosx = Math.cos((double)(this.メイン.rotationYaw + this.mainとの角度) * Math.PI / 180.0D)*this.mainとの距離;
@@ -159,7 +161,7 @@ public class serverDataBlock
 			this.あたり判定用 = new EntityBlockCol(this.メイン.worldObj,this.メイン.posX - 0.5F + cosx, this.メイン.posY + this.mainとの相対座標Y,this.メイン.posZ - 0.5F + var3,this);
 			this.あたり判定用.rotationYaw = 0.0F;
 			this.メイン.worldObj.spawnEntityInWorld(this.あたり判定用);
-		}
+		}*/
 	}
 
 	public byte[] cb()

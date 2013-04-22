@@ -23,7 +23,10 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = "ssMineShipMod", name="飛行船?MOD", version="151_0")
 @NetworkMod(clientSideRequired = true ,serverSideRequired = true,channels = {"データ同期250","データ同期","sskeych","描画要求","描画要求への返事","描画要求への返事座標","描画要求への返事完了"},packetHandler = proxypacket.class)
-public class ssMineShipMOD {	
+public class ssMineShipMOD {
+	
+	public HashMap<Integer,Integer> コールリストID = new HashMap<Integer,Integer>();
+	
 	public HashMap<posXYZ,serverDataBlock> 座標toブロックデータ = new HashMap<posXYZ,serverDataBlock>();
 	public HashMap<posXYZ,clientBlockData> 蔵側座標toブロックデータ = new HashMap<posXYZ,clientBlockData>();
 	public EntityMainBlock カレントエンティティ;

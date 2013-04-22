@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityMainBlock extends ssEntity
 {
@@ -18,6 +20,7 @@ public class EntityMainBlock extends ssEntity
 	public int ブロックの位置Y;
 	public int ブロックの位置Z;
 	public int ディメンジョンID;
+	public int 一番大きいX;
 	public HashSet<posXYZ> 登録されているブロックの相対座標;
 	public ArrayList<serverDataBlock> 構成しているブロック = new ArrayList<serverDataBlock>();
 
@@ -40,6 +43,7 @@ public class EntityMainBlock extends ssEntity
 	public EntityMainBlock(HashSet<posXYZ> poss,World par1World,int x,int y,int z,int bx,int by,int bz)
 	{
 		this(par1World);
+		一番大きいX = bx;
 		this.初回アップデート = false;
 		this.登録されているブロックの相対座標 = poss;
 		this.prevPosX = x+0.5F;//常に0.5足した位置にある
@@ -51,7 +55,7 @@ public class EntityMainBlock extends ssEntity
 		if(!par1World.isRemote)
 		{
 			this.データ用ワールド.setBlock(ブロックの位置X,ブロックの位置Y,ブロックの位置Z,par1World.getBlockId(x, y, z));
-			this.データ用ワールド.setBlockMetadataWithNotify(ブロックの位置X,ブロックの位置Y,ブロックの位置Z,par1World.getBlockMetadata(x, y, z),3);
+			this.データ用ワールド.setBlockMetadataWithNotify(ブロックの位置X,ブロックの位置Y,ブロックの位置Z,par1World.getBlockMetadata(x, y, z),0);
 			if(this.データ用ワールド.getBlockTileEntity(ブロックの位置X,ブロックの位置Y,ブロックの位置Z) != null)
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
@@ -198,7 +202,7 @@ public class EntityMainBlock extends ssEntity
 			}
 
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
-
+/*
 			for(int i = 0;i<this.構成しているブロック.size();i++)
 			{
 				serverDataBlock e = this.構成しているブロック.get(i);
@@ -207,7 +211,7 @@ public class EntityMainBlock extends ssEntity
 					double var3 = Math.sin((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 					e.あたり判定用.setPosition(this.posX - 0.5F + cosx, this.posY + e.mainとの相対座標Y, this.posZ - 0.5F + var3);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -245,6 +249,8 @@ public class EntityMainBlock extends ssEntity
 	{
 		super.writeEntityToNBT(par1NBTTagCompound);
 
+		par1NBTTagCompound.setInteger("一番大きいX",this.一番大きいX);
+		
 		par1NBTTagCompound.setInteger("メインブロックの位置X",this.ブロックの位置X);
 		par1NBTTagCompound.setInteger("メインブロックの位置Y",this.ブロックの位置Y);
 		par1NBTTagCompound.setInteger("メインブロックの位置Z",this.ブロックの位置Z);
@@ -268,6 +274,8 @@ public class EntityMainBlock extends ssEntity
 	{
 		super.readEntityFromNBT(par1NBTTagCompound);
 
+		this.一番大きいX = par1NBTTagCompound.getInteger("一番大きいX");
+		
 		this.ブロックの位置X = par1NBTTagCompound.getInteger("メインブロックの位置X");
 		this.ブロックの位置Y = par1NBTTagCompound.getInteger("メインブロックの位置Y");
 		this.ブロックの位置Z = par1NBTTagCompound.getInteger("メインブロックの位置Z");
@@ -280,16 +288,7 @@ public class EntityMainBlock extends ssEntity
 			this.登録されているブロックの相対座標.add(pos);
 		}
 
-		int 最新の端 = ssMineShipMOD.インスタンス.一番大きいX座標;
-		int 一番大きいX座標  = ssMineShipMOD.インスタンス.一番大きいX座標;Iterator i = this.登録されているブロックの相対座標.iterator();
-
-		while(i.hasNext())
-		{
-			posXYZ p = (posXYZ) i.next();
-			一番大きいX座標 = Math.max(最新の端+p.x,一番大きいX座標);
-		}
-
-		ssMineShipMOD.インスタンス.一番大きいX座標 = Math.max(一番大きいX座標,ssMineShipMOD.インスタンス.一番大きいX座標);
+		ssMineShipMOD.インスタンス.一番大きいX座標 = Math.max(一番大きいX,ssMineShipMOD.インスタンス.一番大きいX座標);
 	}
 
 	public void Entityをブロックに(EntityPlayer player)
@@ -308,8 +307,7 @@ public class EntityMainBlock extends ssEntity
 				int yy = eb.mainとの相対座標Y;
 				int zz = eb.mainとの相対座標Z;
 				ssMineShipMOD.インスタンス.ヌルを返す = true;
-				e.worldObj.setBlock((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z, e.データ用ワールド.getBlockId(x+xx, y+yy, z+zz));
-				e.worldObj.setBlockMetadataWithNotify((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z, e.データ用ワールド.getBlockMetadata(x+xx, y+yy, z+zz),3);
+				e.worldObj.setBlock((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z, e.データ用ワールド.getBlockId(x+xx, y+yy, z+zz),e.データ用ワールド.getBlockMetadata(x+xx, y+yy, z+zz),0);
 				ssMineShipMOD.インスタンス.ヌルを返す = false;
 				if(e.worldObj.getBlockTileEntity((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z) != null)
 				{
@@ -319,12 +317,24 @@ public class EntityMainBlock extends ssEntity
 					e.worldObj.getBlockTileEntity((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z).xCoord = (int)(e.posX-0.5F)+eb.mainとの相対座標X;
 					e.worldObj.getBlockTileEntity((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z).yCoord = (int)(e.posY)+eb.mainとの相対座標Y;
 					e.worldObj.getBlockTileEntity((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z).zCoord = (int)(e.posZ-0.5F)+eb.mainとの相対座標Z;
+					e.worldObj.getBlockTileEntity((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z).validate();
 				}
 			}
-			e.worldObj.setBlock((int)(e.posX-0.5F),(int)e.posY,(int)(e.posZ-0.5F), ssMineShipMOD.インスタンス.mainBlockID);
+			e.worldObj.setBlock((int)(e.posX-0.5F),(int)e.posY,(int)(e.posZ-0.5F), ssMineShipMOD.インスタンス.mainBlockID,0,0);
 			e.setDead();
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+    public int getBrightnessForRender(float par1)
+    {
+        return 15 << 20 | 15 << 4;
+    }
+	
+    public float getBrightness(float par1)//暗さ対策
+    {
+        return this.worldObj.provider.lightBrightnessTable[15];
+    }
 
 	public boolean isInRangeToRenderDist(double par1)//描画が遠距離でも行われるように
 	{
