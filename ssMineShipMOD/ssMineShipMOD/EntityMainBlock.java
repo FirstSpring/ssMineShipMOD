@@ -202,16 +202,17 @@ public class EntityMainBlock extends ssEntity
 			}
 
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
-/*
+
 			for(int i = 0;i<this.構成しているブロック.size();i++)
 			{
 				serverDataBlock e = this.構成しているブロック.get(i);
+				/*
 				if(e.あたり判定用 != null){
 					double cosx = Math.cos((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 					double var3 = Math.sin((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 					e.あたり判定用.setPosition(this.posX - 0.5F + cosx, this.posY + e.mainとの相対座標Y, this.posZ - 0.5F + var3);
-				}
-			}*/
+				}*/
+			}
 		}
 	}
 
@@ -321,6 +322,13 @@ public class EntityMainBlock extends ssEntity
 				}
 			}
 			e.worldObj.setBlock((int)(e.posX-0.5F),(int)e.posY,(int)(e.posZ-0.5F), ssMineShipMOD.インスタンス.mainBlockID,0,0);
+			e.worldObj.markBlockForUpdate((int)(e.posX-0.5F),(int)e.posY,(int)(e.posZ-0.5F));
+			i = e.構成しているブロック.iterator();
+			while(i.hasNext())
+			{
+				serverDataBlock eb = (serverDataBlock)i.next();
+				e.worldObj.markBlockForUpdate((int)(e.posX-0.5F)+eb.mainとの相対座標X,(int)e.posY+eb.mainとの相対座標Y,(int)(e.posZ-0.5F)+eb.mainとの相対座標Z);
+			}
 			e.setDead();
 		}
 	}
