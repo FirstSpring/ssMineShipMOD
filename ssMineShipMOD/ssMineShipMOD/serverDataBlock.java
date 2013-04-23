@@ -3,10 +3,8 @@ package net.minecraft.ssMineShipMOD;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
@@ -48,34 +46,30 @@ public class serverDataBlock
 		データ用ワールド = MinecraftServer.getServer().worldServerForDimension(ssMineShipMOD.インスタンス.データ用ディメンジョン);
 	}
 
-	public void 同期()
+	public void 同期(Player pp)
 	{
 		TileEntity te = this.データ用ワールド.getBlockTileEntity(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z);
 		te.updateEntity();
-		Iterator<EntityPlayer> it = ssMineShipMOD.インスタンス.描画してる蔵一覧.iterator();
-		while(it.hasNext())
-		{
-			Packet p = te.getDescriptionPacket();
-			if(p != null&&p instanceof Packet132TileEntityData){
-				ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
-				DataOutputStream dos = new DataOutputStream(bos);
-				try {
-					p.writePacketData(dos);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期",bos.toByteArray()),(Player)it.next());
+		Packet p = te.getDescriptionPacket();
+		if(p != null&&p instanceof Packet132TileEntityData){
+			ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
+			DataOutputStream dos = new DataOutputStream(bos);
+			try {
+				p.writePacketData(dos);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			else if(p != null&&p instanceof Packet250CustomPayload){
-				ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
-				DataOutputStream dos = new DataOutputStream(bos);
-				try {
-					p.writePacketData(dos);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期250",bos.toByteArray()),(Player)it.next());
+			PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期",bos.toByteArray()),pp);
+		}
+		else if(p != null&&p instanceof Packet250CustomPayload){
+			ByteArrayOutputStream bos = new ByteArrayOutputStream(p.getPacketSize());
+			DataOutputStream dos = new DataOutputStream(bos);
+			try {
+				p.writePacketData(dos);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("データ同期250",bos.toByteArray()),pp);
 		}
 	}
 
@@ -153,7 +147,7 @@ public class serverDataBlock
 			this.後見えている = true;
 		else if(!Block.blocksList[this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z-1)].blockMaterial.getCanBlockGrass())
 			this.後見えている = true;
-		/*
+
 		if(this.上見えている||this.下見えている||this.前見えている||this.右見えている||this.左見えている||this.後見えている)
 		{
 			double cosx = Math.cos((double)(this.メイン.rotationYaw + this.mainとの角度) * Math.PI / 180.0D)*this.mainとの距離;
@@ -161,7 +155,7 @@ public class serverDataBlock
 			this.あたり判定用 = new EntityBlockCol(this.メイン.worldObj,this.メイン.posX - 0.5F + cosx, this.メイン.posY + this.mainとの相対座標Y,this.メイン.posZ - 0.5F + var3,this);
 			this.あたり判定用.rotationYaw = 0.0F;
 			this.メイン.worldObj.spawnEntityInWorld(this.あたり判定用);
-		}*/
+		}
 	}
 
 	public byte[] cb()

@@ -10,11 +10,22 @@ import net.minecraftforge.event.world.WorldEvent;
 public class worldevent
 {
 	@ForgeSubscribe
-	public void entityupdate(EntityJoinWorldEvent e)
+	public void entityjoin(EntityJoinWorldEvent e)
 	{
 		if(ssMineShipMOD.インスタンス.エンティティをスポーンさせない)
-			e.setCanceled(true);
-
+			e.setCanceled(true);/*
+		else if(e.entity.worldObj.provider.dimensionId == ssMineShipMOD.インスタンス.データ用ディメンジョン)
+		{
+			MinecraftServer mcs = MinecraftServer.getServer();
+			mcs.getConfigurationManager().transferEntityToWorld(
+					e.entity,
+					0,
+					mcs.worldServerForDimension(e.entity.worldObj.provider.dimensionId),
+					mcs.worldServerForDimension(ssMineShipMOD.インスタンス.カレントcolエンティティ.メイン.worldObj.provider.dimensionId),
+					new mineshipteleporter(mcs.worldServerForDimension(ssMineShipMOD.インスタンス.カレントcolエンティティ.メイン.worldObj.provider.dimensionId)
+							));
+		}*/
+		//仮題
 	}
 /*
 	@ForgeSubscribe
@@ -26,7 +37,7 @@ public class worldevent
 	}
 */
 	@ForgeSubscribe
-	public void worldunload(WorldEvent.Save l)//データ用ワールドがアンロードされたら、入れ替える
+	public void worldunSave(WorldEvent.Save l)//データ用ワールドがアンロードされたら、入れ替える
 	{
 		if(l.world != null&&l.world instanceof WorldServer&&l.world instanceof mineshipWorld&&l.world.provider.dimensionId == ssMineShipMOD.インスタンス.データ用ディメンジョン)
 		{
@@ -34,6 +45,7 @@ public class worldevent
 			WorldServer w = ((mineshipWorld)l.world).データ用ワールド;
 			DimensionManager.setWorld(l.world.provider.dimensionId,w);
 			MinecraftForge.EVENT_BUS.post(new WorldEvent.Save(w));
+			DimensionManager.setWorld(l.world.provider.dimensionId,(WorldServer) l.world);
 		}
 	}
 	

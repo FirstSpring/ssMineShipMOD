@@ -24,7 +24,6 @@ public class proxypacket implements IPacketHandler{
 				ssMineShipMOD.インスタンス.入力状態.put(String.valueOf(playerd.username), packet.data);
 			}//鯖
 			if(packet.channel.equals("描画要求")){
-				int f = イントへ(packet.data);
 				if(ssMineShipMOD.インスタンス.サーバー描画用データ.containsKey(イントへ(packet.data)))
 				{
 					HashSet<serverDataBlock> i = ssMineShipMOD.インスタンス.サーバー描画用データ.get(イントへ(packet.data));
@@ -51,13 +50,12 @@ public class proxypacket implements IPacketHandler{
 							PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("描画要求への返事座標",bos.toByteArray()),player);
 							最初 = false;
 						}
-						byte[] データ = new byte[25];
 						//どれかの面が見えてたら
 						if(s.上見えている||s.下見えている||s.前見えている||s.右見えている||s.左見えている||s.後見えている)
 						{
 							PacketDispatcher.sendPacketToPlayer(new Packet250CustomPayload("描画要求への返事",s.cb()),player);
 							if(s.常に更新と描画するか)
-								s.同期();
+								s.同期(player);
 						}
 						else c++;
 					}
