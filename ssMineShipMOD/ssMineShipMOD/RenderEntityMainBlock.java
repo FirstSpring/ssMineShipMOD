@@ -93,6 +93,7 @@ public class RenderEntityMainBlock  extends Render
 		ssMineShipMOD.インスタンス.コールリストID.put(e.entityId, cid);
 		GL11.glNewList(cid, GL11.GL_COMPILE);
 		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glTranslatef((float)-0.5F, (float)-0.5F, (float)-0.5F);
 		Tessellator.instance.startDrawingQuads();
 		this.loadTexture("/terrain.png");
@@ -108,6 +109,7 @@ public class RenderEntityMainBlock  extends Render
 			}
 		}
 		Tessellator.instance.draw();
+		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 		GL11.glEndList();
 		ssMineShipMOD.インスタンス.構築済み.put(e.entityId,1);

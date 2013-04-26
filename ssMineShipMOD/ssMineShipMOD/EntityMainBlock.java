@@ -23,7 +23,6 @@ public class EntityMainBlock extends ssEntity
 	public int 一番大きいX;
 	public HashSet<posXYZ> 登録されているブロックの相対座標;
 	public ArrayList<serverDataBlock> 構成しているブロック = new ArrayList<serverDataBlock>();
-
 	public int スピード = 0;
 
 	public EntityMainBlock(World par1World) {
@@ -202,17 +201,17 @@ public class EntityMainBlock extends ssEntity
 			}
 
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
-
+/*
 			for(int i = 0;i<this.構成しているブロック.size();i++)
 			{
 				serverDataBlock e = this.構成しているブロック.get(i);
-				/*
+				
 				if(e.あたり判定用 != null){
 					double cosx = Math.cos((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 					double var3 = Math.sin((double)(this.rotationYaw + e.mainとの角度) * Math.PI / 180.0D)*e.mainとの距離;
 					e.あたり判定用.setPosition(this.posX - 0.5F + cosx, this.posY + e.mainとの相対座標Y, this.posZ - 0.5F + var3);
-				}*/
-			}
+				}
+			}*/
 		}
 	}
 
@@ -338,7 +337,7 @@ public class EntityMainBlock extends ssEntity
     {
         return 15 << 20 | 15 << 4;
     }
-	
+
     public float getBrightness(float par1)//暗さ対策
     {
         return this.worldObj.provider.lightBrightnessTable[15];

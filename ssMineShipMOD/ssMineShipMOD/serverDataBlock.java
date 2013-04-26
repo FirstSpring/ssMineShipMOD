@@ -147,7 +147,7 @@ public class serverDataBlock
 			this.後見えている = true;
 		else if(!Block.blocksList[this.データ用ワールド.getBlockId(this.メイン.ブロックの位置X+this.mainとの相対座標X,this.メイン.ブロックの位置Y+this.mainとの相対座標Y,this.メイン.ブロックの位置Z+this.mainとの相対座標Z-1)].blockMaterial.getCanBlockGrass())
 			this.後見えている = true;
-
+/*
 		if(this.上見えている||this.下見えている||this.前見えている||this.右見えている||this.左見えている||this.後見えている)
 		{
 			double cosx = Math.cos((double)(this.メイン.rotationYaw + this.mainとの角度) * Math.PI / 180.0D)*this.mainとの距離;
@@ -155,7 +155,7 @@ public class serverDataBlock
 			this.あたり判定用 = new EntityBlockCol(this.メイン.worldObj,this.メイン.posX - 0.5F + cosx, this.メイン.posY + this.mainとの相対座標Y,this.メイン.posZ - 0.5F + var3,this);
 			this.あたり判定用.rotationYaw = 0.0F;
 			this.メイン.worldObj.spawnEntityInWorld(this.あたり判定用);
-		}
+		}*/
 	}
 
 	public byte[] cb()
